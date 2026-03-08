@@ -86,20 +86,29 @@ Catatan:
 
 ## 3) Setup Database
 
-### Opsi A (direkomendasikan): migration Laravel
+### Opsi A (direkomendasikan): migration Laravel (tanpa seed)
 
 ```bash
-php artisan migrate:fresh --seed
+php artisan migrate
+# atau reset ulang saat dev:
+# php artisan migrate:fresh
 ```
 
 ### Opsi B: copy DDL SQL Server manual
 
 1. Jalankan file: `database/sqlserver_ddl.sql` di SQL Server.
-2. Jalankan seeder data awal:
 
 ```bash
-php artisan db:seed
+# Tidak ada data sample otomatis; jalankan script saja.
 ```
+
+### Data contoh (opsional untuk demo/dev)
+
+```bash
+php artisan db:seed --class=SampleDataSeeder
+```
+
+Seeder ini akan membuat akun demo (password `password`) dan contoh pelanggan + item inventory. Jangan dipakai di environment produksi.
 
 ## 4) Jalankan Aplikasi
 
@@ -111,22 +120,13 @@ php artisan serve
 - Login backoffice: `http://127.0.0.1:8000/login`
 - Scan station: `http://127.0.0.1:8000/admin/scan`
 
-## 5) Akun Seeder
-
-Semua password: `password`
-
-- `owner@nale-laundry.test` (owner)
-- `admin@nale-laundry.test` (admin)
-- `kasir@nale-laundry.test` (kasir)
-- `operator@nale-laundry.test` (operator)
-
-## 6) Matriks Akses Role
+## 5) Matriks Akses Role
 
 - `owner/admin`: full access
 - `kasir`: dashboard, pelanggan, order, pembayaran, laporan bulanan
 - `operator`: dashboard, order (update status), inventory, mutasi stok, stok opname
 
-## 7) Struktur Domain Inti
+## 6) Struktur Domain Inti
 
 - `customers`
 - `service_packages`
