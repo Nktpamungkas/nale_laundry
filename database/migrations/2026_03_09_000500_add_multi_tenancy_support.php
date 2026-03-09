@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,6 +23,17 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
         });
+
+        $defaultTenantId = DB::table('tenants')->insertGetId([
+            'name' => 'Default Tenant',
+            'slug' => 'default',
+            'status' => 'active',
+            'plan' => 'default',
+            'timezone' => 'Asia/Jakarta',
+            'currency' => 'IDR',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         Schema::create('tenant_settings', function (Blueprint $table) {
             $table->id();
@@ -58,66 +70,66 @@ return new class extends Migration
             }
         });
 
-        Schema::table('customers', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('customers', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('customers_code_unique');
             $table->unique(['tenant_id', 'code'], 'uq_customers_tenant_code');
         });
 
-        Schema::table('inventory_items', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('inventory_items', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('inventory_items_sku_unique');
             $table->unique(['tenant_id', 'sku'], 'uq_inventory_tenant_sku');
         });
 
-        Schema::table('service_packages', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('service_packages', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('service_packages_code_unique');
             $table->unique(['tenant_id', 'code'], 'uq_service_packages_tenant_code');
         });
 
-        Schema::table('service_package_materials', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('service_package_materials', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('uq_package_material');
             $table->unique(['tenant_id', 'service_package_id', 'inventory_item_id'], 'uq_package_material_tenant');
         });
 
-        Schema::table('laundry_orders', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('laundry_orders', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('laundry_orders_order_number_unique');
             $table->unique(['tenant_id', 'order_number'], 'uq_orders_tenant_number');
         });
 
-        Schema::table('laundry_order_items', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('laundry_order_items', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
         });
 
-        Schema::table('order_status_histories', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('order_status_histories', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
         });
 
-        Schema::table('payments', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('payments', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
         });
 
-        Schema::table('stock_movements', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('stock_movements', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
         });
 
-        Schema::table('stock_opnames', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('stock_opnames', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('stock_opnames_opname_number_unique');
             $table->unique(['tenant_id', 'opname_number'], 'uq_opname_tenant_number');
         });
 
-        Schema::table('stock_opname_items', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('stock_opname_items', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
             $table->dropUnique('uq_opname_item');
             $table->unique(['tenant_id', 'stock_opname_id', 'inventory_item_id'], 'uq_opname_item_tenant');
         });
 
-        Schema::table('whatsapp_notifications', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
+        Schema::table('whatsapp_notifications', function (Blueprint $table) use ($defaultTenantId) {
+            $table->foreignId('tenant_id')->default($defaultTenantId)->after('id')->constrained()->cascadeOnDelete();
         });
     }
 
