@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureAdmin::class,
             'role' => \App\Http\Middleware\EnsureRole::class,
+            'tenant' => \App\Http\Middleware\SetCurrentTenant::class,
+            'activity' => \App\Http\Middleware\TrackUserActivity::class,
+        ]);
+
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\SetCurrentTenant::class,
+            \App\Http\Middleware\TrackUserActivity::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

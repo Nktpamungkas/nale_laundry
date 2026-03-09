@@ -21,6 +21,10 @@ class EnsureRole
             abort(401);
         }
 
+        if (method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) {
+            return $next($request);
+        }
+
         $allowedRoles = collect($roles)
             ->map(fn (string $role) => trim($role))
             ->filter()

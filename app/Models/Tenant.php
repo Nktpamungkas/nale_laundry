@@ -7,25 +7,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends Model
+class Tenant extends Model
 {
     use HasFactory;
-    use BelongsToTenant;
 
     protected $fillable = [
-        'code',
         'name',
-        'phone',
-        'email',
-        'address',
+        'slug',
+        'status',
+        'plan',
+        'timezone',
+        'currency',
         'notes',
     ];
 
     /**
-     * @return HasMany<LaundryOrder, $this>
+     * @return HasMany<User, $this>
      */
-    public function laundryOrders(): HasMany
+    public function users(): HasMany
     {
-        return $this->hasMany(LaundryOrder::class);
+        return $this->hasMany(User::class);
     }
 }

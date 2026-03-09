@@ -90,6 +90,8 @@ Catatan:
 
 ```bash
 php artisan migrate
+# Seeder default hanya membuat akun superadmin:
+# php artisan db:seed
 # atau reset ulang saat dev:
 # php artisan migrate:fresh
 ```
@@ -100,6 +102,7 @@ php artisan migrate
 
 ```bash
 # Tidak ada data sample otomatis; jalankan script saja.
+# Catatan: skrip DDL ini belum mencakup fitur multi-tenant terbaru. Disarankan pakai migrate.
 ```
 
 ### Data contoh (opsional untuk demo/dev)
@@ -108,7 +111,17 @@ php artisan migrate
 php artisan db:seed --class=SampleDataSeeder
 ```
 
-Seeder ini akan membuat akun demo (password `password`) dan contoh pelanggan + item inventory. Jangan dipakai di environment produksi.
+Seeder ini akan membuat akun demo (password `password`) dan contoh pelanggan + item inventory pada tenant `demo`. Login dengan memasukkan slug `demo`. Jangan dipakai di environment produksi.
+
+### Multi-tenant & Superadmin
+
+- Aplikasi sekarang multi-tenant (single DB). Semua data bisnis terikat ke `tenant_id`.
+- Akun master: `superadmin@nale-laundry.test` / `superadmin` (role `superadmin`, tenant global).
+- Tenant-user login harus memasukkan **slug tenant** di form login.
+- Superadmin bisa:
+  - Membuat tenant dan user tenant (menu Superadmin).
+  - Impersonasi tenant (pilih tenant lalu "Ganti").
+  - Lihat aktivitas user (top hits 30 hari) dan performa tenant.
 
 ## 4) Jalankan Aplikasi
 

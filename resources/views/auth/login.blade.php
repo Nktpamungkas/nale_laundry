@@ -6,6 +6,11 @@
         <form method="POST" action="{{ route('login.submit') }}">
             @csrf
             <div class="field">
+                <label>Tenant / Kode Outlet</label>
+                <input type="text" name="tenant" value="{{ old('tenant') }}" placeholder="contoh: nale-main">
+                <small class="muted">Kosongkan hanya untuk superadmin.</small>
+            </div>
+            <div class="field">
                 <label>Email</label>
                 <input type="email" name="email" value="{{ old('email') }}" required>
             </div>

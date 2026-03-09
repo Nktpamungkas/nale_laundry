@@ -6,6 +6,8 @@ use App\Models\Customer;
 use App\Models\InventoryItem;
 use App\Models\ServicePackage;
 use App\Models\ServicePackageMaterial;
+use App\Models\Tenant;
+use App\Support\TenantContext;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +20,19 @@ class SampleDataSeeder extends Seeder
      */
     public function run(): void
     {
+        $tenant = Tenant::query()->firstOrCreate(
+            ['slug' => 'demo'],
+            [
+                'name' => 'Demo Laundry',
+                'status' => 'active',
+                'plan' => 'demo',
+            ]
+        );
+
+        TenantContext::set($tenant);
+
         User::query()->updateOrCreate(
-            ['email' => 'owner@nale-laundry.test'],
+            ['email' => 'owner@nale-laundry.test', 'tenant_id' => $tenant->id],
             [
                 'name' => 'Owner Nale Laundry',
                 'phone' => '081234567880',
@@ -30,7 +43,7 @@ class SampleDataSeeder extends Seeder
         );
 
         User::query()->updateOrCreate(
-            ['email' => 'admin@nale-laundry.test'],
+            ['email' => 'admin@nale-laundry.test', 'tenant_id' => $tenant->id],
             [
                 'name' => 'Admin Nale Laundry',
                 'phone' => '081234567890',
@@ -41,7 +54,7 @@ class SampleDataSeeder extends Seeder
         );
 
         User::query()->updateOrCreate(
-            ['email' => 'kasir@nale-laundry.test'],
+            ['email' => 'kasir@nale-laundry.test', 'tenant_id' => $tenant->id],
             [
                 'name' => 'Kasir Nale Laundry',
                 'phone' => '081234567891',
@@ -52,7 +65,7 @@ class SampleDataSeeder extends Seeder
         );
 
         User::query()->updateOrCreate(
-            ['email' => 'operator@nale-laundry.test'],
+            ['email' => 'operator@nale-laundry.test', 'tenant_id' => $tenant->id],
             [
                 'name' => 'Operator Nale Laundry',
                 'phone' => '081234567892',

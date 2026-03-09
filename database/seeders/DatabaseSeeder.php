@@ -11,8 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Intentionally left blank.
-        // Biarkan database benar-benar kosong setelah migrate;
-        // isi data sesuai kebutuhan bisnis secara manual atau lewat seeder khusus.
+        // Seeder minimal: hanya buat akun superadmin global.
+        $this->call([
+            MasterAdminSeeder::class,
+        ]);
     }
 }

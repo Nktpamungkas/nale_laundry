@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\StockOpnameController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerTrackingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [CustomerTrackingController::class, 'index'])->name('tracking.index');
@@ -73,4 +74,11 @@ Route::middleware('auth')->group(function () {
             ->middleware('role:owner,admin,kasir')
             ->name('laundry-orders.payments');
     });
+});
+
+Route::prefix('superadmin')->name('superadmin.')->middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::get('/', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    Route::post('/impersonate', [SuperAdminController::class, 'impersonate'])->name('impersonate');
+    Route::post('/tenants', [SuperAdminController::class, 'storeTenant'])->name('tenants.store');
+    Route::post('/users', [SuperAdminController::class, 'storeUser'])->name('users.store');
 });

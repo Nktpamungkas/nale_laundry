@@ -149,7 +149,17 @@
     @auth
         <aside class="sidebar">
             <div class="brand">Nale Laundry</div>
-            <div class="sub-brand">Sistem Operasional</div>
+            <div class="sub-brand">
+                Sistem Operasional<br>
+                @php($ctxTenant = App\Support\TenantContext::tenant())
+                <small>
+                    @if($ctxTenant)
+                        Tenant: {{ $ctxTenant->name }}
+                    @elseif(auth()->user()?->isSuperAdmin())
+                        Mode: Global
+                    @endif
+                </small>
+            </div>
             <nav class="menu">
                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                 <a href="{{ route('admin.laundry-orders.index') }}">Order Laundry</a>
@@ -158,6 +168,10 @@
                 <a href="{{ route('admin.inventory-items.index') }}">Inventory</a>
                 <a href="{{ route('admin.stock-movements.index') }}">Mutasi Stok</a>
                 <a href="{{ route('admin.stock-opnames.index') }}">Stok Opname</a>
+                @if(auth()->user()?->isSuperAdmin())
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 12px 0;">
+                    <a href="{{ route('superadmin.dashboard') }}">Superadmin</a>
+                @endif
             </nav>
             <form action="{{ route('logout') }}" method="POST" class="mt-16">
                 @csrf
