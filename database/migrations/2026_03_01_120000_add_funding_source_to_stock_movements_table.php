@@ -12,16 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasColumn('stock_movements', 'funding_source')) {
-            Schema::table('stock_movements', function (Blueprint $table) {
-                $table->string('funding_source', 30)->nullable()->after('movement_type');
-            });
+        // Kolom sudah ada di migrasi utama (2026_02_28_000100), jadi cukup exit.
+        if (Schema::hasColumn('stock_movements', 'funding_source')) {
+            return;
         }
-
-        DB::table('stock_movements')
-            ->where('movement_type', 'purchase')
-            ->whereNull('funding_source')
-            ->update(['funding_source' => 'kas_toko']);
     }
 
     /**
@@ -29,10 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasColumn('stock_movements', 'funding_source')) {
-            Schema::table('stock_movements', function (Blueprint $table) {
-                $table->dropColumn('funding_source');
-            });
-        }
+        // Tidak perlu drop apa pun; kolom bagian dari migrasi utama.
     }
 };
